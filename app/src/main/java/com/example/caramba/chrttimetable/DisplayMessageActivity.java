@@ -23,16 +23,34 @@ public class DisplayMessageActivity extends AppCompatActivity {
 
         TextView textView = new TextView(this);
         textView.setTextSize(50);
-        textView.setText(message);
+        //textView.setText(message);
+        String parseOutput = "";
+        try {
+            parseSite(parseOutput);
+        }
+        catch (IOException e)
+        {
+            parseOutput = "Error!";
+        }
+        textView.setText(parseOutput);
         setContentView(textView);
     }
 
-    public void parseSite() throws IOException
+    public void parseSite(String output) throws IOException
     {
         int ColOfGroupNumber = 0;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Document document = Jsoup.connect("https://radiotech.su/students/fulltimedepartment/Timetable-of-classes/").get();
+                }
+                catch (IOException t)
+                {}
+            }
+        }).run();
 
-        Document document = Jsoup.connect("https://radiotech.su/students/fulltimedepartment/Timetable-of-classes/").get();
-        Element table = document.select("table").get(1);
+        Element table = Globals.doc.select("table").get(1);
         Elements rows = table.select("tr");
         Elements cols = rows.get(0).select("td");
         for (int i = 0; i < cols.size(); i++)
@@ -42,6 +60,15 @@ public class DisplayMessageActivity extends AppCompatActivity {
                 ColOfGroupNumber = i;
                 break;
             }
+        }
+        for (int i = 1; i < rows.size(); i++)
+        {
+            if (rows.get(i).select("td").get(ColOfGroupNumber).select("em").get(0).toString() != "&nbsp;")
+            {
+                output += rows.get(i).select("td").get(ColOfGroupNumber).select("em").get(0).toString() + "\n";
+                output += rows.get(i).select("td").get(ColOfGroupNumber).select("em").get(1).toString() + "\n";
+            }
+
         }
 
     }
