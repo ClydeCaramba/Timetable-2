@@ -6,4 +6,9 @@
     android:layout_height="match_parent"
     tools:context=".DisplayMessageActivity">
 
+    <TextView
+        android:id="@+id/textViewResult"
+        android:layout_width="383dp"
+        android:layout_height="497dp"
+        android:text="TextView" />
 </android.support.constraint.ConstraintLayout>
